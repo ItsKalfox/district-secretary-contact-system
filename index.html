@@ -372,6 +372,48 @@
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: rgba(201,168,76,0.2); border-radius: 3px; }
+
+  /* ── LANGUAGE SWITCHER ── */
+  .lang-btn {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    z-index: 100;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: var(--text-primary);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    backdrop-filter: blur(8px);
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    user-select: none;
+  }
+  .lang-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+  .lang-btn:active {
+    transform: translateY(0);
+  }
+  @media (max-width: 480px) {
+    .lang-btn {
+      top: 16px;
+      right: 16px;
+      padding: 6px 12px;
+      font-size: 12px;
+    }
+  }
 </style>
 </head>
 <body>
@@ -379,6 +421,7 @@
 <div class="hero">
   <div class="hero-bg"></div>
   <div class="hero-gradient"></div>
+  <button id="langToggle" class="lang-btn">සිංහල</button>
   <div class="hero-content">
     <h1 class="hero-title">Divisional <span>Secretariat </span>of <br>Matara Four Gravets</h1>
     <p class="hero-sub">Employee Contact Directory</p>
@@ -401,7 +444,36 @@
 const DEFAULT_IMG = "https://cdn-icons-png.flaticon.com/512/847/847969.png";
 const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTrPm6Zq96LLlXLdFz9uwQad8Q06Md-Ej2ybuWK1grWfHcSdNzQB1EFgBr0FKY80efUJ4TKqMBoVL_Z/pub?gid=0&single=true&output=csv";
 
+const TRANSLATIONS = {
+  en: {
+    title: "Office Contact Directory",
+    heroTitle: "Divisional <span>Secretariat </span>of <br>Matara Four Gravets",
+    heroSub: "Employee Contact Directory",
+    searchPlaceholder: "Search by name or position…",
+    call: "Call",
+    phoneNumbers: "Phone Numbers",
+    noEmployees: "No employees found.",
+    errorLoad: "Could not load directory. Please try again.",
+    btnText: "සිංහල",
+    ariaShowMore: "Show more"
+  },
+  si: {
+    title: "කාර්යාලීය සම්බන්ධතා නාමාවලිය",
+    heroTitle: "ප්රාදේශීය ලේකම් කාර්යාලය <br><span>මාතර</span>",
+    heroSub: "සේවක සම්බන්ධතා නාමාවලිය",
+    searchPlaceholder: "නම හෝ තනතුර අනුව සොයන්න...",
+    call: "අමතන්න",
+    phoneNumbers: "දුරකථන අංක",
+    noEmployees: "සේවකයින් කිසිවෙකු හමු නොවීය.",
+    errorLoad: "නාමාවලිය පූරණය කිරීමට නොහැකි විය. කරුණාකර නැවත උත්සාහ කරන්න.",
+    btnText: "English",
+    ariaShowMore: "වැඩි විස්තර පෙන්වන්න"
+  }
+};
+
+let currentLang = localStorage.getItem('preferredLang') || 'en';
 let allCards = [];
+let employeeData = [];
 
 function toDialable(num) {
   return '+94' + num.trim().replace(/^0/, '');
@@ -410,6 +482,7 @@ function toDialable(num) {
 function buildCard(name, position, phones, email, imgSrc) {
   const phoneList = phones.split('|').map(p => p.trim()).filter(Boolean);
   const primary = phoneList[0] || '';
+  const t = TRANSLATIONS[currentLang];
 
   const card = document.createElement('div');
   card.className = 'card';
@@ -419,7 +492,7 @@ function buildCard(name, position, phones, email, imgSrc) {
   const extraPhones = phoneList.map(p => `
     <div class="phone-row">
       <span class="phone-number">${p}</span>
-      <a class="phone-call-link" href="tel:${toDialable(p)}">Call</a>
+      <a class="phone-call-link" href="tel:${toDialable(p)}">${t.call}</a>
     </div>
   `).join('');
 
@@ -440,16 +513,16 @@ function buildCard(name, position, phones, email, imgSrc) {
       <div class="card-actions">
         <a class="call-btn" href="tel:${toDialable(primary)}">
           <svg class="call-icon" viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg>
-          Call
+          ${t.call}
         </a>
-        <div class="toggle-btn" aria-label="Show more">
+        <div class="toggle-btn" aria-label="${t.ariaShowMore}">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
         </div>
       </div>
     </div>
     <div class="card-extra">
       <div class="extra-divider"></div>
-      <div class="extra-label">Phone Numbers</div>
+      <div class="extra-label">${t.phoneNumbers}</div>
       ${extraPhones}
       ${emailRow}
     </div>
@@ -468,31 +541,93 @@ function buildCard(name, position, phones, email, imgSrc) {
   return card;
 }
 
+function setLanguage(lang) {
+  currentLang = lang;
+  localStorage.setItem('preferredLang', lang);
+
+  const t = TRANSLATIONS[lang];
+
+  // Update static elements
+  document.title = t.title;
+  document.querySelector('.hero-title').innerHTML = t.heroTitle;
+  document.querySelector('.hero-sub').textContent = t.heroSub;
+  
+  const searchInput = document.getElementById('searchInput');
+  searchInput.placeholder = t.searchPlaceholder;
+
+  const langToggle = document.getElementById('langToggle');
+  langToggle.textContent = t.btnText;
+  
+  const emptyState = document.getElementById('emptyState');
+  if (emptyState.textContent === TRANSLATIONS.en.noEmployees || emptyState.textContent === TRANSLATIONS.si.noEmployees || emptyState.textContent === 'No employees found.') {
+    emptyState.textContent = t.noEmployees;
+  } else if (emptyState.textContent === TRANSLATIONS.en.errorLoad || emptyState.textContent === TRANSLATIONS.si.errorLoad || emptyState.textContent === 'Could not load directory. Please try again.') {
+    emptyState.textContent = t.errorLoad;
+  }
+
+  // Re-render cards in the new language
+  renderCards();
+}
+
+function renderCards() {
+  const container = document.getElementById('cards');
+  
+  // Remove existing cards
+  const cards = container.querySelectorAll('.card');
+  cards.forEach(c => c.remove());
+  
+  allCards = [];
+
+  employeeData.forEach(emp => {
+    const card = buildCard(emp.name, emp.position, emp.phones, emp.email, emp.img);
+    allCards.push(card);
+    container.appendChild(card);
+  });
+
+  // Re-apply search filter
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  if (q) {
+    let visible = 0;
+    allCards.forEach(card => {
+      const match = card.dataset.name.includes(q) || card.dataset.position.includes(q);
+      card.style.display = match ? '' : 'none';
+      if (match) visible++;
+    });
+    document.getElementById('emptyState').style.display = visible === 0 ? 'block' : 'none';
+  } else {
+    document.getElementById('emptyState').style.display = 'none';
+  }
+}
+
+// Fetch data from sheet
 fetch(SHEET_URL)
   .then(res => res.text())
   .then(data => {
     const rows = data.split('\n').slice(1).filter(r => r.trim());
-    const container = document.getElementById('cards');
-
-    rows.forEach(row => {
+    employeeData = rows.map(row => {
       const cols = row.split(',');
-      const name     = (cols[0] || '').trim();
-      const position = (cols[1] || '').trim();
-      const phones   = (cols[2] || '').trim();
-      const email    = (cols[3] || '').trim();
-      const img      = (cols[4] || '').trim() || DEFAULT_IMG;
+      return {
+        name: (cols[0] || '').trim(),
+        position: (cols[1] || '').trim(),
+        phones: (cols[2] || '').trim(),
+        email: (cols[3] || '').trim(),
+        img: (cols[4] || '').trim() || DEFAULT_IMG
+      };
+    }).filter(emp => emp.name);
 
-      if (!name) return;
-
-      const card = buildCard(name, position, phones, email, img);
-      allCards.push(card);
-      container.appendChild(card);
-    });
+    renderCards();
   })
   .catch(() => {
-    document.getElementById('emptyState').style.display = 'block';
-    document.getElementById('emptyState').textContent = 'Could not load directory. Please try again.';
+    const emptyState = document.getElementById('emptyState');
+    emptyState.style.display = 'block';
+    emptyState.textContent = TRANSLATIONS[currentLang].errorLoad;
   });
+
+// Setup event listeners
+document.getElementById('langToggle').addEventListener('click', () => {
+  const nextLang = currentLang === 'en' ? 'si' : 'en';
+  setLanguage(nextLang);
+});
 
 document.getElementById('searchInput').addEventListener('input', function() {
   const q = this.value.toLowerCase();
@@ -504,6 +639,9 @@ document.getElementById('searchInput').addEventListener('input', function() {
   });
   document.getElementById('emptyState').style.display = visible === 0 ? 'block' : 'none';
 });
+
+// Initialize language on startup
+setLanguage(currentLang);
 </script>
 
 </body>
