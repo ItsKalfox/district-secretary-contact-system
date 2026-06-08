@@ -579,7 +579,9 @@ function renderCards() {
   allCards = [];
 
   employeeData.forEach(emp => {
-    const card = buildCard(emp.name, emp.position, emp.phones, emp.email, emp.img);
+    const name = currentLang === 'si' ? (emp.nameSl || emp.nameEn) : emp.nameEn;
+    const position = currentLang === 'si' ? (emp.positionSl || emp.positionEn) : emp.positionEn;
+    const card = buildCard(name, position, emp.phones, emp.email, emp.img);
     allCards.push(card);
     container.appendChild(card);
   });
@@ -607,13 +609,15 @@ fetch(SHEET_URL)
     employeeData = rows.map(row => {
       const cols = row.split(',');
       return {
-        name: (cols[0] || '').trim(),
-        position: (cols[1] || '').trim(),
-        phones: (cols[2] || '').trim(),
-        email: (cols[3] || '').trim(),
-        img: (cols[4] || '').trim() || DEFAULT_IMG
+        nameEn: (cols[0] || '').trim(),
+        nameSl: (cols[1] || '').trim(),
+        positionEn: (cols[2] || '').trim(),
+        positionSl: (cols[3] || '').trim(),
+        phones: (cols[4] || '').trim(),
+        email: (cols[5] || '').trim(),
+        img: (cols[6] || '').trim() || DEFAULT_IMG
       };
-    }).filter(emp => emp.name);
+    }).filter(emp => emp.nameEn || emp.nameSl);
 
     renderCards();
   })
