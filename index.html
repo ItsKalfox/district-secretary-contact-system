@@ -164,26 +164,29 @@
   .dropdown-btn {
     background: rgba(30, 26, 18, 0.95);
     border: 1px solid var(--border);
-    color: var(--text-primary);
-    padding: 14px 20px;
-    border-radius: 50px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 14px;
-    font-weight: 500;
+    color: var(--text-muted);
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
     cursor: pointer;
     display: flex;
     align-items: center;
-    gap: 10px;
+    justify-content: center;
     backdrop-filter: blur(10px);
-    transition: border-color 0.2s, background 0.2s;
+    transition: all 0.2s ease;
     outline: none;
     user-select: none;
-    min-width: 180px;
-    justify-content: space-between;
   }
 
   .dropdown-btn:focus, .dropdown-btn:hover {
     border-color: var(--border-hover);
+    color: var(--text-primary);
+  }
+
+  .dropdown-btn.active {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(201, 168, 76, 0.08);
   }
 
   .dropdown-content {
@@ -277,16 +280,9 @@
   }
 
   @media (max-width: 560px) {
-    .search-wrapper {
-      flex-direction: column;
-      align-items: stretch;
-      gap: 10px;
-    }
-    .dropdown-btn {
-      min-width: 100%;
-    }
     .dropdown-content {
-      width: 100%;
+      width: calc(100vw - 32px);
+      max-width: 280px;
     }
   }
 
@@ -557,6 +553,43 @@
       font-size: 12px;
     }
   }
+
+  /* ── FOOTER ── */
+  .footer {
+    padding: 30px 20px;
+    margin-top: 40px;
+    background: rgba(10, 9, 6, 0.5);
+    backdrop-filter: blur(12px);
+  }
+
+  .footer-content {
+    max-width: 680px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .footer-logo {
+    width: 30px;
+    height: 30px;
+    color: var(--text-muted);
+    opacity: 0.6;
+    transition: color 0.2s, opacity 0.2s;
+  }
+
+  .footer-logo:hover {
+    color: var(--accent);
+    opacity: 0.9;
+  }
+
+  .footer-text {
+    font-size: 12px;
+    color: var(--text-muted);
+    letter-spacing: 0.03em;
+    font-weight: 400;
+  }
 </style>
 </head>
 <body>
@@ -574,9 +607,10 @@
 
 <div class="search-wrapper">
   <div class="dropdown" id="categoryDropdown">
-    <button class="dropdown-btn" id="dropdownBtn">
-      <span class="btn-text">All Categories</span>
-      <svg class="dropdown-arrow" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+    <button class="dropdown-btn" id="dropdownBtn" aria-label="Filter by category">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+      </svg>
     </button>
     <div class="dropdown-content" id="dropdownContent"></div>
   </div>
@@ -592,6 +626,13 @@
 <div class="container" id="cards">
   <div class="empty" id="emptyState">No employees found.</div>
 </div>
+
+<footer class="footer">
+  <div class="footer-content">
+    <img src="https://cdn.jsdelivr.net/gh/ItsKalfox/ItsKalfox/tailcoded-logo-mini.png" alt="Tail Coded Studio" class="footer-logo" />
+    <span class="footer-text">&copy; 2026 Tail Coded Studio. All rights reserved.</span>
+  </div>
+</footer>
 
 <script>
 const DEFAULT_IMG = "https://cdn-icons-png.flaticon.com/512/847/847969.png";
@@ -613,7 +654,7 @@ const TRANSLATIONS = {
   },
   si: {
     title: "කාර්යාලීය සම්බන්ධතා නාමාවලිය",
-    heroTitle: "ප්රාදේශීය <span>ලේකම් කාර්යාලය </span> - මාතර",
+    heroTitle: "ප්‍රාදේශීය ලේකම්<br>කාර්යාලය <span> - මාතර</span>",
     heroSub: "සේවක සම්බන්ධතා නාමාවලිය",
     searchPlaceholder: "නම හෝ තනතුර අනුව සොයන්න...",
     call: "අමතන්න",
@@ -717,13 +758,11 @@ function extractCategories() {
 function renderDropdown() {
   const t = TRANSLATIONS[currentLang];
   const dropdownBtn = document.getElementById('dropdownBtn');
-  const btnText = dropdownBtn.querySelector('.btn-text');
   
   if (selectedCategoryKey) {
-    const selectedCat = categoriesList.find(c => c.key === selectedCategoryKey);
-    btnText.textContent = selectedCat ? (currentLang === 'si' ? selectedCat.sl : selectedCat.en) : t.allCategories;
+    dropdownBtn.classList.add('active');
   } else {
-    btnText.textContent = t.allCategories;
+    dropdownBtn.classList.remove('active');
   }
 
   const dropdownContent = document.getElementById('dropdownContent');
