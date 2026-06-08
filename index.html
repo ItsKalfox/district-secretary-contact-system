@@ -1,211 +1,508 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Office Contact Directory</title>
-
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #f4f6f8;
-}
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* HERO HEADER */
-.header {
-    background: url("https://images.unsplash.com/photo-1520607162513-77705c0f0d4a") center/cover;
-    color: white;
-    padding: 40px 20px;
-    text-align: center;
-}
+  :root {
+    --accent: #c9a84c;
+    --accent-light: #e8d5a0;
+    --surface: rgba(255,255,255,0.04);
+    --surface-hover: rgba(255,255,255,0.08);
+    --border: rgba(255,255,255,0.1);
+    --border-hover: rgba(201,168,76,0.5);
+    --text-primary: #f5f0e8;
+    --text-secondary: rgba(245,240,232,0.6);
+    --text-muted: rgba(245,240,232,0.4);
+    --card-bg: rgba(20,18,14,0.7);
+    --card-bg-open: rgba(25,22,16,0.85);
+    --green: #4caf82;
+  }
 
-.header h1 {
-    margin: 0;
-    font-size: 22px;
-}
+  body {
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    background: #0a0906;
+    color: var(--text-primary);
+    overflow-x: hidden;
+  }
 
-.header p {
-    margin-top: 8px;
-    font-size: 14px;
-    opacity: 0.9;
-}
-
-/* CONTAINER */
-.container {
-    padding: 15px;
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    min-height: 340px;
     display: flex;
     flex-direction: column;
-    gap: 12px;
-}
+    align-items: center;
+    justify-content: flex-end;
+    padding-bottom: 48px;
+    overflow: hidden;
+  }
 
-/* CARD */
-.card {
-    background: white;
-    border-radius: 12px;
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background-image: url("https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=1400&q=80");
+    background-size: cover;
+    background-position: center 30%;
+    filter: brightness(0.28) saturate(0.6);
+    transform: scale(1.03);
+  }
+
+  .hero-gradient {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(10,9,6,0) 20%,
+      rgba(10,9,6,0.6) 70%,
+      rgba(10,9,6,1) 100%
+    );
+  }
+
+  .hero-content {
+    position: relative;
+    text-align: center;
+    z-index: 1;
+  }
+
+  .hero-eyebrow {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 14px;
+  }
+
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(32px, 6vw, 54px);
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+  }
+
+  .hero-title span {
+    color: var(--accent);
+  }
+
+  .hero-sub {
+    font-size: 13px;
+    font-weight: 300;
+    color: var(--text-secondary);
+    margin-top: 10px;
+    letter-spacing: 0.04em;
+  }
+
+  .hero-divider {
+    width: 40px;
+    height: 1px;
+    background: var(--accent);
+    margin: 18px auto 0;
+    opacity: 0.6;
+  }
+
+  /* ── SEARCH ── */
+  .search-bar {
+    position: relative;
+    max-width: 480px;
+    margin: 0 auto 0;
+    padding: 0 20px;
+    transform: translateY(24px);
+    z-index: 10;
+  }
+
+  .search-bar input {
+    width: 100%;
+    background: rgba(30,26,18,0.95);
+    border: 1px solid var(--border);
+    border-radius: 50px;
+    padding: 14px 48px 14px 20px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: var(--text-primary);
+    outline: none;
+    transition: border-color 0.2s;
+    backdrop-filter: blur(10px);
+  }
+
+  .search-bar input::placeholder { color: var(--text-muted); }
+  .search-bar input:focus { border-color: var(--border-hover); }
+
+  .search-icon {
+    position: absolute;
+    right: 36px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    font-size: 16px;
+    pointer-events: none;
+  }
+
+  /* ── CARDS CONTAINER ── */
+  .container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 56px 16px 60px;
     display: flex;
-    padding: 12px;
-    align-items: flex-start;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-}
+    flex-direction: column;
+    gap: 10px;
+  }
 
-/* PROFILE IMAGE */
-.card img {
-    width: 60px;
-    height: 60px;
+  /* ── CARD ── */
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    transition: border-color 0.2s, background 0.2s;
+    backdrop-filter: blur(12px);
+  }
+
+  .card:hover {
+    border-color: rgba(201,168,76,0.25);
+  }
+
+  .card.open {
+    background: var(--card-bg-open);
+    border-color: rgba(201,168,76,0.3);
+  }
+
+  /* ── CARD MAIN ROW ── */
+  .card-main {
+    display: flex;
+    align-items: center;
+    padding: 14px 16px;
+    gap: 14px;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .avatar {
+    width: 46px;
+    height: 46px;
     border-radius: 50%;
     object-fit: cover;
-    margin-right: 12px;
-}
+    border: 1.5px solid var(--border);
+    flex-shrink: 0;
+    background: #1a1710;
+  }
 
-/* INFO */
-.info {
+  .card-info {
     flex: 1;
-}
+    min-width: 0;
+  }
 
-.name {
-    font-weight: bold;
-    font-size: 16px;
-}
+  .card-name {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 
-.position {
-    font-size: 13px;
-    color: #555;
+  .card-role {
+    font-size: 12px;
+    font-weight: 300;
+    color: var(--text-muted);
     margin-top: 2px;
-}
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 
-/* PHONE ROW */
-.phone-row {
+  .card-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+
+  .call-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: var(--green);
+    color: #fff;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 6px 13px;
+    border-radius: 50px;
+    text-decoration: none;
+    transition: opacity 0.15s;
+    white-space: nowrap;
+  }
+
+  .call-btn:hover { opacity: 0.85; }
+
+  .call-icon {
+    display: inline-block;
+    width: 13px;
+    height: 13px;
+    fill: white;
+  }
+
+  .toggle-btn {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s, transform 0.25s;
+    flex-shrink: 0;
+    color: var(--text-muted);
+    font-size: 12px;
+  }
+
+  .toggle-btn:hover {
+    border-color: var(--border-hover);
+    color: var(--accent);
+  }
+
+  .card.open .toggle-btn {
+    transform: rotate(180deg);
+    border-color: rgba(201,168,76,0.4);
+    color: var(--accent);
+  }
+
+  /* ── EXPANDED PANEL ── */
+  .card-extra {
+    display: none;
+    padding: 0 16px 18px 76px;
+    gap: 10px;
+    flex-direction: column;
+  }
+
+  .card.open .card-extra {
+    display: flex;
+  }
+
+  .extra-divider {
+    height: 1px;
+    background: var(--border);
+    margin-bottom: 4px;
+  }
+
+  .extra-label {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+
+  .phone-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-top: 6px;
-}
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
 
-.primary-phone {
-    font-size: 13px;
-}
+  .phone-row:last-child { border-bottom: none; }
 
-/* BUTTONS */
-.call-btn {
-    background: #2ecc71;
-    color: white;
-    padding: 5px 10px;
-    border-radius: 6px;
+  .phone-number {
+    font-size: 14px;
+    font-weight: 400;
+    color: var(--text-primary);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.02em;
+  }
+
+  .phone-call-link {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--green);
     text-decoration: none;
-    font-size: 12px;
-}
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    opacity: 0.85;
+    transition: opacity 0.15s;
+  }
 
-/* EXPAND */
-.expand-btn {
-    cursor: pointer;
-    font-size: 18px;
-    padding: 0 5px;
-}
+  .phone-call-link:hover { opacity: 1; }
 
-.extra {
+  .email-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  .email-icon {
+    color: var(--accent);
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  .email-link {
+    font-size: 13px;
+    color: var(--accent-light);
+    text-decoration: none;
+    transition: color 0.15s;
+    word-break: break-all;
+  }
+
+  .email-link:hover { color: var(--accent); }
+
+  /* ── EMPTY STATE ── */
+  .empty {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-muted);
+    font-size: 14px;
     display: none;
-    margin-top: 8px;
-    font-size: 13px;
-}
+  }
 
-.extra.show {
-    display: block;
-}
-
-.email {
-    color: #3498db;
-    text-decoration: none;
-    display: block;
-    margin-top: 6px;
-}
-
-/* MOBILE OPTIMIZATION */
-@media (min-width: 768px) {
-    .container {
-        max-width: 700px;
-        margin: auto;
-    }
-}
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(201,168,76,0.2); border-radius: 3px; }
 </style>
-
 </head>
-
 <body>
 
-<div class="header">
-    <h1>District Secretary Office</h1>
-    <p>Employee Contact Directory</p>
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-gradient"></div>
+  <div class="hero-content">
+    <h1 class="hero-title">Divisional <span>Secretariat </span>of <br>Matara Four Gravets</h1>
+    <p class="hero-sub">Employee Contact Directory</p>
+    <div class="hero-divider"></div>
+  </div>
 </div>
 
-<div class="container" id="cards"></div>
+<div class="search-bar">
+  <input type="text" id="searchInput" placeholder="Search by name or position…" autocomplete="off" />
+  <span class="search-icon">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+  </span>
+</div>
+
+<div class="container" id="cards">
+  <div class="empty" id="emptyState">No employees found.</div>
+</div>
 
 <script>
-// DEFAULT IMAGE
 const DEFAULT_IMG = "https://cdn-icons-png.flaticon.com/512/847/847969.png";
-
-// GOOGLE SHEET CSV LINK (YOU WILL REPLACE THIS)
 const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTrPm6Zq96LLlXLdFz9uwQad8Q06Md-Ej2ybuWK1grWfHcSdNzQB1EFgBr0FKY80efUJ4TKqMBoVL_Z/pub?gid=0&single=true&output=csv";
 
-// FETCH DATA
+let allCards = [];
+
+function toDialable(num) {
+  return '+94' + num.trim().replace(/^0/, '');
+}
+
+function buildCard(name, position, phones, email, imgSrc) {
+  const phoneList = phones.split('|').map(p => p.trim()).filter(Boolean);
+  const primary = phoneList[0] || '';
+
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.dataset.name = name.toLowerCase();
+  card.dataset.position = position.toLowerCase();
+
+  const extraPhones = phoneList.map(p => `
+    <div class="phone-row">
+      <span class="phone-number">${p}</span>
+      <a class="phone-call-link" href="tel:${toDialable(p)}">Call</a>
+    </div>
+  `).join('');
+
+  const emailRow = email && email.trim() ? `
+    <div class="email-row">
+      <svg class="email-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7L12 13 2 7"/></svg>
+      <a class="email-link" href="mailto:${email.trim()}">${email.trim()}</a>
+    </div>
+  ` : '';
+
+  card.innerHTML = `
+    <div class="card-main">
+      <img class="avatar" src="${imgSrc}" onerror="this.src='${DEFAULT_IMG}'" alt="${name}">
+      <div class="card-info">
+        <div class="card-name">${name}</div>
+        <div class="card-role">${position}</div>
+      </div>
+      <div class="card-actions">
+        <a class="call-btn" href="tel:${toDialable(primary)}">
+          <svg class="call-icon" viewBox="0 0 24 24"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1L6.6 10.8z"/></svg>
+          Call
+        </a>
+        <div class="toggle-btn" aria-label="Show more">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+      </div>
+    </div>
+    <div class="card-extra">
+      <div class="extra-divider"></div>
+      <div class="extra-label">Phone Numbers</div>
+      ${extraPhones}
+      ${emailRow}
+    </div>
+  `;
+
+  const toggle = card.querySelector('.toggle-btn');
+  toggle.addEventListener('click', (e) => {
+    e.stopPropagation();
+    card.classList.toggle('open');
+  });
+
+  card.querySelector('.card-main').addEventListener('click', () => {
+    card.classList.toggle('open');
+  });
+
+  return card;
+}
+
 fetch(SHEET_URL)
-.then(res => res.text())
-.then(data => {
-    const rows = data.split("\n").slice(1);
+  .then(res => res.text())
+  .then(data => {
+    const rows = data.split('\n').slice(1).filter(r => r.trim());
+    const container = document.getElementById('cards');
 
-    rows.forEach((row, index) => {
-        const cols = row.split(",");
+    rows.forEach(row => {
+      const cols = row.split(',');
+      const name     = (cols[0] || '').trim();
+      const position = (cols[1] || '').trim();
+      const phones   = (cols[2] || '').trim();
+      const email    = (cols[3] || '').trim();
+      const img      = (cols[4] || '').trim() || DEFAULT_IMG;
 
-        const name = cols[0];
-        const position = cols[1];
-        const phones = cols[2]; // format: 077...,071...
-        const email = cols[3];
-        const img = cols[4] || DEFAULT_IMG;
+      if (!name) return;
 
-        const phoneList = phones.split("|");
-        const primary = phoneList[0];
-
-        const card = document.createElement("div");
-        card.className = "card";
-
-        card.innerHTML = `
-            <img src="${img}" onerror="this.src='${DEFAULT_IMG}'"/>
-
-            <div class="info">
-                <div class="name">${name}</div>
-                <div class="position">${position}</div>
-
-                <div class="phone-row">
-                    <div class="primary-phone">${primary}</div>
-                    <a class="call-btn" href="tel:+94${primary.replace(/^0/, '')}">Call</a>
-                    <div class="expand-btn">▼</div>
-                </div>
-
-                <div class="extra">
-                    <div><b>All Numbers:</b></div>
-                    ${phoneList.map(p => `
-                        <div>
-                            ${p}
-                            <a href="tel:+94${p.replace(/^0/, '')}">Call</a>
-                        </div>
-                    `).join("")}
-
-                    <a class="email" href="mailto:${email}">${email}</a>
-                </div>
-            </div>
-        `;
-
-        // EXPAND LOGIC
-        const btn = card.querySelector(".expand-btn");
-        const extra = card.querySelector(".extra");
-
-        btn.addEventListener("click", () => {
-            extra.classList.toggle("show");
-        });
-
-        document.getElementById("cards").appendChild(card);
+      const card = buildCard(name, position, phones, email, img);
+      allCards.push(card);
+      container.appendChild(card);
     });
+  })
+  .catch(() => {
+    document.getElementById('emptyState').style.display = 'block';
+    document.getElementById('emptyState').textContent = 'Could not load directory. Please try again.';
+  });
+
+document.getElementById('searchInput').addEventListener('input', function() {
+  const q = this.value.toLowerCase();
+  let visible = 0;
+  allCards.forEach(card => {
+    const match = card.dataset.name.includes(q) || card.dataset.position.includes(q);
+    card.style.display = match ? '' : 'none';
+    if (match) visible++;
+  });
+  document.getElementById('emptyState').style.display = visible === 0 ? 'block' : 'none';
 });
 </script>
 
