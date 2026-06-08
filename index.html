@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Office Contact Directory</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f6f8;
+}
+
+/* HERO HEADER */
+.header {
+    background: url("https://images.unsplash.com/photo-1520607162513-77705c0f0d4a") center/cover;
+    color: white;
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 22px;
+}
+
+.header p {
+    margin-top: 8px;
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+/* CONTAINER */
+.container {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* CARD */
+.card {
+    background: white;
+    border-radius: 12px;
+    display: flex;
+    padding: 12px;
+    align-items: flex-start;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+/* PROFILE IMAGE */
+.card img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 12px;
+}
+
+/* INFO */
+.info {
+    flex: 1;
+}
+
+.name {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.position {
+    font-size: 13px;
+    color: #555;
+    margin-top: 2px;
+}
+
+/* PHONE ROW */
+.phone-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 6px;
+}
+
+.primary-phone {
+    font-size: 13px;
+}
+
+/* BUTTONS */
+.call-btn {
+    background: #2ecc71;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 12px;
+}
+
+/* EXPAND */
+.expand-btn {
+    cursor: pointer;
+    font-size: 18px;
+    padding: 0 5px;
+}
+
+.extra {
+    display: none;
+    margin-top: 8px;
+    font-size: 13px;
+}
+
+.extra.show {
+    display: block;
+}
+
+.email {
+    color: #3498db;
+    text-decoration: none;
+    display: block;
+    margin-top: 6px;
+}
+
+/* MOBILE OPTIMIZATION */
+@media (min-width: 768px) {
+    .container {
+        max-width: 700px;
+        margin: auto;
+    }
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+    <h1>District Secretary Office</h1>
+    <p>Employee Contact Directory</p>
+</div>
+
+<div class="container" id="cards"></div>
+
+<script>
+// DEFAULT IMAGE
+const DEFAULT_IMG = "https://cdn-icons-png.flaticon.com/512/847/847969.png";
+
+// GOOGLE SHEET CSV LINK (YOU WILL REPLACE THIS)
+const SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTrPm6Zq96LLlXLdFz9uwQad8Q06Md-Ej2ybuWK1grWfHcSdNzQB1EFgBr0FKY80efUJ4TKqMBoVL_Z/pub?gid=0&single=true&output=csv";
+
+// FETCH DATA
+fetch(SHEET_URL)
+.then(res => res.text())
+.then(data => {
+    const rows = data.split("\n").slice(1);
+
+    rows.forEach((row, index) => {
+        const cols = row.split(",");
+
+        const name = cols[0];
+        const position = cols[1];
+        const phones = cols[2]; // format: 077...,071...
+        const email = cols[3];
+        const img = cols[4] || DEFAULT_IMG;
+
+        const phoneList = phones.split("|");
+        const primary = phoneList[0];
+
+        const card = document.createElement("div");
+        card.className = "card";
+
+        card.innerHTML = `
+            <img src="${img}" onerror="this.src='${DEFAULT_IMG}'"/>
+
+            <div class="info">
+                <div class="name">${name}</div>
+                <div class="position">${position}</div>
+
+                <div class="phone-row">
+                    <div class="primary-phone">${primary}</div>
+                    <a class="call-btn" href="tel:+94${primary.replace(/^0/, '')}">Call</a>
+                    <div class="expand-btn">▼</div>
+                </div>
+
+                <div class="extra">
+                    <div><b>All Numbers:</b></div>
+                    ${phoneList.map(p => `
+                        <div>
+                            ${p}
+                            <a href="tel:+94${p.replace(/^0/, '')}">Call</a>
+                        </div>
+                    `).join("")}
+
+                    <a class="email" href="mailto:${email}">${email}</a>
+                </div>
+            </div>
+        `;
+
+        // EXPAND LOGIC
+        const btn = card.querySelector(".expand-btn");
+        const extra = card.querySelector(".extra");
+
+        btn.addEventListener("click", () => {
+            extra.classList.toggle("show");
+        });
+
+        document.getElementById("cards").appendChild(card);
+    });
+});
+</script>
+
+</body>
+</html>
