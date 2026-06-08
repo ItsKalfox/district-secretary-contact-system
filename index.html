@@ -110,14 +110,22 @@
     opacity: 0.6;
   }
 
-  /* ── SEARCH ── */
-  .search-bar {
+  /* ── SEARCH & FILTER WRAPPER ── */
+  .search-wrapper {
     position: relative;
-    max-width: 480px;
-    margin: 0 auto 0;
-    padding: 0 20px;
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
     transform: translateY(24px);
     z-index: 10;
+  }
+
+  .search-bar {
+    position: relative;
+    flex: 1;
   }
 
   .search-bar input {
@@ -139,12 +147,147 @@
 
   .search-icon {
     position: absolute;
-    right: 36px;
+    right: 20px;
     top: 50%;
     transform: translateY(-50%);
     color: var(--text-muted);
     font-size: 16px;
     pointer-events: none;
+  }
+
+  /* ── CUSTOM DROPDOWN ── */
+  .dropdown {
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .dropdown-btn {
+    background: rgba(30, 26, 18, 0.95);
+    border: 1px solid var(--border);
+    color: var(--text-primary);
+    padding: 14px 20px;
+    border-radius: 50px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    backdrop-filter: blur(10px);
+    transition: border-color 0.2s, background 0.2s;
+    outline: none;
+    user-select: none;
+    min-width: 180px;
+    justify-content: space-between;
+  }
+
+  .dropdown-btn:focus, .dropdown-btn:hover {
+    border-color: var(--border-hover);
+  }
+
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    background: rgba(20, 18, 14, 0.98);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    min-width: 240px;
+    max-height: 280px;
+    overflow-y: auto;
+    z-index: 100;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(15px);
+    padding: 6px;
+  }
+
+  .dropdown.show .dropdown-content {
+    display: block;
+  }
+
+  .dropdown.show .dropdown-arrow {
+    transform: rotate(180deg);
+  }
+
+  .dropdown-arrow {
+    transition: transform 0.2s ease;
+    color: var(--text-muted);
+    flex-shrink: 0;
+  }
+
+  .dropdown-item {
+    color: var(--text-primary);
+    padding: 10px 14px;
+    font-size: 13px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .dropdown-item:hover {
+    background: var(--surface-hover);
+    color: var(--accent);
+  }
+
+  .dropdown-item.active {
+    background: rgba(201, 168, 76, 0.15);
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  /* ── CATEGORY GROUPING ── */
+  .category-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+
+  .category-group:last-child {
+    margin-bottom: 0;
+  }
+
+  .category-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-top: 10px;
+    margin-bottom: 6px;
+    user-select: none;
+  }
+
+  .category-title {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+
+  .category-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, rgba(201, 168, 76, 0.35), rgba(201, 168, 76, 0.03));
+  }
+
+  @media (max-width: 560px) {
+    .search-wrapper {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 10px;
+    }
+    .dropdown-btn {
+      min-width: 100%;
+    }
+    .dropdown-content {
+      width: 100%;
+    }
   }
 
   /* ── CARDS CONTAINER ── */
@@ -429,11 +572,21 @@
   </div>
 </div>
 
-<div class="search-bar">
-  <input type="text" id="searchInput" placeholder="Search by name or position…" autocomplete="off" />
-  <span class="search-icon">
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-  </span>
+<div class="search-wrapper">
+  <div class="dropdown" id="categoryDropdown">
+    <button class="dropdown-btn" id="dropdownBtn">
+      <span class="btn-text">All Categories</span>
+      <svg class="dropdown-arrow" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
+    <div class="dropdown-content" id="dropdownContent"></div>
+  </div>
+
+  <div class="search-bar">
+    <input type="text" id="searchInput" placeholder="Search by name or position…" autocomplete="off" />
+    <span class="search-icon">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    </span>
+  </div>
 </div>
 
 <div class="container" id="cards">
@@ -455,11 +608,12 @@ const TRANSLATIONS = {
     noEmployees: "No employees found.",
     errorLoad: "Could not load directory. Please try again.",
     btnText: "සිංහල",
-    ariaShowMore: "Show more"
+    ariaShowMore: "Show more",
+    allCategories: "All Categories"
   },
   si: {
     title: "කාර්යාලීය සම්බන්ධතා නාමාවලිය",
-    heroTitle: "ප්රාදේශීය ලේකම් කාර්යාලය <br><span>මාතර</span>",
+    heroTitle: "ප්රාදේශීය <span>ලේකම් කාර්යාලය </span> - මාතර",
     heroSub: "සේවක සම්බන්ධතා නාමාවලිය",
     searchPlaceholder: "නම හෝ තනතුර අනුව සොයන්න...",
     call: "අමතන්න",
@@ -467,13 +621,16 @@ const TRANSLATIONS = {
     noEmployees: "සේවකයින් කිසිවෙකු හමු නොවීය.",
     errorLoad: "නාමාවලිය පූරණය කිරීමට නොහැකි විය. කරුණාකර නැවත උත්සාහ කරන්න.",
     btnText: "English",
-    ariaShowMore: "වැඩි විස්තර පෙන්වන්න"
+    ariaShowMore: "වැඩි විස්තර පෙන්වන්න",
+    allCategories: "සියලුම කාණ්ඩ"
   }
 };
 
 let currentLang = localStorage.getItem('preferredLang') || 'en';
 let allCards = [];
 let employeeData = [];
+let categoriesList = [];
+let selectedCategoryKey = null;
 
 function toDialable(num) {
   return '+94' + num.trim().replace(/^0/, '');
@@ -541,13 +698,74 @@ function buildCard(name, position, phones, email, imgSrc) {
   return card;
 }
 
+function extractCategories() {
+  const seen = new Set();
+  categoriesList = [];
+  employeeData.forEach(emp => {
+    const key = emp.categoryEn;
+    if (key && !seen.has(key)) {
+      seen.add(key);
+      categoriesList.push({
+        key: key,
+        en: emp.categoryEn,
+        sl: emp.categorySl || emp.categoryEn
+      });
+    }
+  });
+}
+
+function renderDropdown() {
+  const t = TRANSLATIONS[currentLang];
+  const dropdownBtn = document.getElementById('dropdownBtn');
+  const btnText = dropdownBtn.querySelector('.btn-text');
+  
+  if (selectedCategoryKey) {
+    const selectedCat = categoriesList.find(c => c.key === selectedCategoryKey);
+    btnText.textContent = selectedCat ? (currentLang === 'si' ? selectedCat.sl : selectedCat.en) : t.allCategories;
+  } else {
+    btnText.textContent = t.allCategories;
+  }
+
+  const dropdownContent = document.getElementById('dropdownContent');
+  dropdownContent.innerHTML = '';
+
+  const allItem = document.createElement('div');
+  allItem.className = `dropdown-item ${!selectedCategoryKey ? 'active' : ''}`;
+  allItem.textContent = t.allCategories;
+  allItem.addEventListener('click', () => {
+    selectedCategoryKey = null;
+    document.getElementById('categoryDropdown').classList.remove('show');
+    renderDropdown();
+    renderCards();
+  });
+  dropdownContent.appendChild(allItem);
+
+  categoriesList.forEach(cat => {
+    const item = document.createElement('div');
+    const name = currentLang === 'si' ? cat.sl : cat.en;
+    item.className = `dropdown-item ${selectedCategoryKey === cat.key ? 'active' : ''}`;
+    item.textContent = name;
+    
+    item.addEventListener('click', () => {
+      if (selectedCategoryKey === cat.key) {
+        selectedCategoryKey = null;
+      } else {
+        selectedCategoryKey = cat.key;
+      }
+      document.getElementById('categoryDropdown').classList.remove('show');
+      renderDropdown();
+      renderCards();
+    });
+    dropdownContent.appendChild(item);
+  });
+}
+
 function setLanguage(lang) {
   currentLang = lang;
   localStorage.setItem('preferredLang', lang);
 
   const t = TRANSLATIONS[lang];
 
-  // Update static elements
   document.title = t.title;
   document.querySelector('.hero-title').innerHTML = t.heroTitle;
   document.querySelector('.hero-sub').textContent = t.heroSub;
@@ -559,49 +777,76 @@ function setLanguage(lang) {
   langToggle.textContent = t.btnText;
   
   const emptyState = document.getElementById('emptyState');
-  if (emptyState.textContent === TRANSLATIONS.en.noEmployees || emptyState.textContent === TRANSLATIONS.si.noEmployees || emptyState.textContent === 'No employees found.') {
-    emptyState.textContent = t.noEmployees;
-  } else if (emptyState.textContent === TRANSLATIONS.en.errorLoad || emptyState.textContent === TRANSLATIONS.si.errorLoad || emptyState.textContent === 'Could not load directory. Please try again.') {
-    emptyState.textContent = t.errorLoad;
-  }
+  emptyState.textContent = t.noEmployees;
 
-  // Re-render cards in the new language
+  renderDropdown();
   renderCards();
 }
 
 function renderCards() {
   const container = document.getElementById('cards');
   
-  // Remove existing cards
-  const cards = container.querySelectorAll('.card');
-  cards.forEach(c => c.remove());
+  container.innerHTML = `<div class="empty" id="emptyState">${TRANSLATIONS[currentLang].noEmployees}</div>`;
   
   allCards = [];
 
-  employeeData.forEach(emp => {
-    const name = currentLang === 'si' ? (emp.nameSl || emp.nameEn) : emp.nameEn;
-    const position = currentLang === 'si' ? (emp.positionSl || emp.positionEn) : emp.positionEn;
-    const card = buildCard(name, position, emp.phones, emp.email, emp.img);
-    allCards.push(card);
-    container.appendChild(card);
+  const categoriesToShow = selectedCategoryKey 
+    ? categoriesList.filter(c => c.key === selectedCategoryKey)
+    : categoriesList;
+
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  let totalVisible = 0;
+
+  categoriesToShow.forEach(cat => {
+    const empsInCat = employeeData.filter(emp => emp.categoryEn === cat.key);
+    
+    const matchingEmps = empsInCat.filter(emp => {
+      if (!q) return true;
+      const name = currentLang === 'si' ? (emp.nameSl || emp.nameEn) : emp.nameEn;
+      const position = currentLang === 'si' ? (emp.positionSl || emp.positionEn) : emp.positionEn;
+      return name.toLowerCase().includes(q) || position.toLowerCase().includes(q);
+    });
+
+    if (matchingEmps.length > 0) {
+      const groupDiv = document.createElement('div');
+      groupDiv.className = 'category-group';
+
+      const headerDiv = document.createElement('div');
+      headerDiv.className = 'category-header';
+
+      const titleSpan = document.createElement('span');
+      titleSpan.className = 'category-title';
+      titleSpan.textContent = currentLang === 'si' ? cat.sl : cat.en;
+
+      const lineDiv = document.createElement('div');
+      lineDiv.className = 'category-line';
+
+      headerDiv.appendChild(titleSpan);
+      headerDiv.appendChild(lineDiv);
+      groupDiv.appendChild(headerDiv);
+
+      matchingEmps.forEach(emp => {
+        const name = currentLang === 'si' ? (emp.nameSl || emp.nameEn) : emp.nameEn;
+        const position = currentLang === 'si' ? (emp.positionSl || emp.positionEn) : emp.positionEn;
+        const card = buildCard(name, position, emp.phones, emp.email, emp.img);
+        
+        allCards.push(card);
+        groupDiv.appendChild(card);
+        totalVisible++;
+      });
+
+      container.appendChild(groupDiv);
+    }
   });
 
-  // Re-apply search filter
-  const q = document.getElementById('searchInput').value.toLowerCase();
-  if (q) {
-    let visible = 0;
-    allCards.forEach(card => {
-      const match = card.dataset.name.includes(q) || card.dataset.position.includes(q);
-      card.style.display = match ? '' : 'none';
-      if (match) visible++;
-    });
-    document.getElementById('emptyState').style.display = visible === 0 ? 'block' : 'none';
+  const emptyState = document.getElementById('emptyState');
+  if (totalVisible === 0) {
+    emptyState.style.display = 'block';
   } else {
-    document.getElementById('emptyState').style.display = 'none';
+    emptyState.style.display = 'none';
   }
 }
 
-// Fetch data from sheet
 fetch(SHEET_URL)
   .then(res => res.text())
   .then(data => {
@@ -611,14 +856,18 @@ fetch(SHEET_URL)
       return {
         nameEn: (cols[0] || '').trim(),
         nameSl: (cols[1] || '').trim(),
-        positionEn: (cols[2] || '').trim(),
-        positionSl: (cols[3] || '').trim(),
-        phones: (cols[4] || '').trim(),
-        email: (cols[5] || '').trim(),
-        img: (cols[6] || '').trim() || DEFAULT_IMG
+        categoryEn: (cols[2] || '').trim() || 'Uncategorized',
+        categorySl: (cols[3] || '').trim() || 'වර්ගීකරණය නොකළ',
+        positionEn: (cols[4] || '').trim(),
+        positionSl: (cols[5] || '').trim(),
+        phones: (cols[6] || '').trim(),
+        email: (cols[7] || '').trim(),
+        img: (cols[8] || '').trim() || DEFAULT_IMG
       };
     }).filter(emp => emp.nameEn || emp.nameSl);
 
+    extractCategories();
+    renderDropdown();
     renderCards();
   })
   .catch(() => {
@@ -627,21 +876,27 @@ fetch(SHEET_URL)
     emptyState.textContent = TRANSLATIONS[currentLang].errorLoad;
   });
 
-// Setup event listeners
 document.getElementById('langToggle').addEventListener('click', () => {
   const nextLang = currentLang === 'en' ? 'si' : 'en';
   setLanguage(nextLang);
 });
 
 document.getElementById('searchInput').addEventListener('input', function() {
-  const q = this.value.toLowerCase();
-  let visible = 0;
-  allCards.forEach(card => {
-    const match = card.dataset.name.includes(q) || card.dataset.position.includes(q);
-    card.style.display = match ? '' : 'none';
-    if (match) visible++;
-  });
-  document.getElementById('emptyState').style.display = visible === 0 ? 'block' : 'none';
+  renderCards();
+});
+
+// Dropdown click handler
+document.getElementById('dropdownBtn').addEventListener('click', (e) => {
+  e.stopPropagation();
+  document.getElementById('categoryDropdown').classList.toggle('show');
+});
+
+// Close dropdown when clicking outside
+window.addEventListener('click', (e) => {
+  const dropdown = document.getElementById('categoryDropdown');
+  if (dropdown && !dropdown.contains(e.target)) {
+    dropdown.classList.remove('show');
+  }
 });
 
 // Initialize language on startup
