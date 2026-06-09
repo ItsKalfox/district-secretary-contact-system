@@ -2,7 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<meta name="theme-color" content="#faf9f5"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="default"/>
 <title>Office Contact Directory</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
@@ -24,7 +27,7 @@
     --green: #2e855e;
   }
 
-  body {
+  html, body {
     font-family: 'DM Sans', sans-serif;
     min-height: 100vh;
     background: #faf9f5;
@@ -47,12 +50,12 @@
   .hero-bg {
     position: absolute;
     inset: 0;
-    background-image: url("Images/background/ds_division.jpg");
+    background-image: url("Images/background/office-building.jpeg");
     background-size: cover;
     background-position: center 30%;
     filter: brightness(0.9) contrast(1.0) saturate(0.9);
     transform: scale(1.03);
-    opacity: 0.8;
+    opacity: 1;
   }
 
   .hero-gradient {
@@ -61,8 +64,8 @@
     background: linear-gradient(
       to bottom,
       rgba(250, 249, 245, 0) 0%,
-      rgba(250, 249, 245, 0) 25%,
-      rgba(250, 249, 245, 0.95) 60%,
+      rgba(250, 249, 245, 0) 30%,
+      rgba(250, 249, 245, 0.95) 65%,
       rgba(250, 249, 245, 1) 100%
     );
   }
@@ -528,8 +531,8 @@
   /* ── LANGUAGE SWITCHER ── */
   .lang-btn {
     position: absolute;
-    top: 24px;
-    right: 24px;
+    top: calc(24px + env(safe-area-inset-top, 0px));
+    right: calc(24px + env(safe-area-inset-right, 0px));
     z-index: 100;
     background: rgba(255, 255, 255, 0.8);
     border: 1px solid var(--border);
@@ -561,8 +564,8 @@
   }
   @media (max-width: 480px) {
     .lang-btn {
-      top: 16px;
-      right: 16px;
+      top: calc(16px + env(safe-area-inset-top, 0px));
+      right: calc(16px + env(safe-area-inset-right, 0px));
       padding: 6px 12px;
       font-size: 12px;
     }
