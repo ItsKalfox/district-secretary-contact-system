@@ -33,6 +33,7 @@ html, body {
   justify-content: flex-end;
   padding-bottom: 10px;
   overflow: hidden;
+  background-color: #72825d;
 }
 
 .hero-bg {
