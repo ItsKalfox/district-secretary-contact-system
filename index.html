@@ -10,24 +10,24 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --accent: #c9a84c;
-    --accent-light: #e8d5a0;
-    --surface: rgba(255,255,255,0.04);
-    --surface-hover: rgba(255,255,255,0.08);
-    --border: rgba(255,255,255,0.1);
-    --border-hover: rgba(201,168,76,0.5);
-    --text-primary: #f5f0e8;
-    --text-secondary: rgba(245,240,232,0.6);
-    --text-muted: rgba(245,240,232,0.4);
-    --card-bg: rgba(20,18,14,0.7);
-    --card-bg-open: rgba(25,22,16,0.85);
-    --green: #4caf82;
+    --accent: #9c7f2f;
+    --accent-light: #6d571b;
+    --surface: rgba(0, 0, 0, 0.04);
+    --surface-hover: rgba(0, 0, 0, 0.07);
+    --border: rgba(0, 0, 0, 0.08);
+    --border-hover: rgba(156, 127, 47, 0.4);
+    --text-primary: #1f1c16;
+    --text-secondary: #5c564a;
+    --text-muted: #8e8677;
+    --card-bg: rgba(255, 255, 255, 0.85);
+    --card-bg-open: rgba(255, 255, 255, 0.95);
+    --green: #2e855e;
   }
 
   body {
     font-family: 'DM Sans', sans-serif;
     min-height: 100vh;
-    background: #0a0906;
+    background: #faf9f5;
     color: var(--text-primary);
     overflow-x: hidden;
   }
@@ -35,12 +35,12 @@
   /* ── HERO ── */
   .hero {
     position: relative;
-    min-height: 340px;
+    min-height: 330px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-end;
-    padding-bottom: 48px;
+    padding-bottom: 10px;
     overflow: hidden;
   }
 
@@ -50,8 +50,9 @@
     background-image: url("Images/background/ds_division.jpg");
     background-size: cover;
     background-position: center 30%;
-    filter: brightness(0.28) saturate(0.6);
+    filter: brightness(0.9) contrast(1.0) saturate(0.9);
     transform: scale(1.03);
+    opacity: 0.8;
   }
 
   .hero-gradient {
@@ -59,9 +60,10 @@
     inset: 0;
     background: linear-gradient(
       to bottom,
-      rgba(10,9,6,0) 20%,
-      rgba(10,9,6,0.6) 70%,
-      rgba(10,9,6,1) 100%
+      rgba(250, 249, 245, 0) 0%,
+      rgba(250, 249, 245, 0) 25%,
+      rgba(250, 249, 245, 0.95) 60%,
+      rgba(250, 249, 245, 1) 100%
     );
   }
 
@@ -95,11 +97,12 @@
   }
 
   .hero-sub {
-    font-size: 13px;
-    font-weight: 300;
-    color: var(--text-secondary);
-    margin-top: 10px;
-    letter-spacing: 0.04em;
+    font-size: 16px;
+    font-weight: 500;
+    color: #5c564a;
+    margin-top: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
   }
 
   .hero-divider {
@@ -130,7 +133,7 @@
 
   .search-bar input {
     width: 100%;
-    background: rgba(30,26,18,0.95);
+    background: #ffffff;
     border: 1px solid var(--border);
     border-radius: 50px;
     padding: 14px 48px 14px 20px;
@@ -138,8 +141,12 @@
     font-size: 14px;
     color: var(--text-primary);
     outline: none;
-    transition: border-color 0.2s;
+    transition: border-color 0.2s, box-shadow 0.2s;
     backdrop-filter: blur(10px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  }
+  .search-bar input:focus {
+    box-shadow: 0 4px 16px rgba(156, 127, 47, 0.08);
   }
 
   .search-bar input::placeholder { color: var(--text-muted); }
@@ -162,7 +169,7 @@
   }
 
   .dropdown-btn {
-    background: rgba(30, 26, 18, 0.95);
+    background: #ffffff;
     border: 1px solid var(--border);
     color: var(--text-muted);
     width: 48px;
@@ -176,17 +183,20 @@
     transition: all 0.2s ease;
     outline: none;
     user-select: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
   }
 
   .dropdown-btn:focus, .dropdown-btn:hover {
     border-color: var(--border-hover);
     color: var(--text-primary);
+    background: #ffffff;
+    box-shadow: 0 4px 16px rgba(156, 127, 47, 0.08);
   }
 
   .dropdown-btn.active {
     border-color: var(--accent);
     color: var(--accent);
-    background: rgba(201, 168, 76, 0.08);
+    background: rgba(156, 127, 47, 0.08);
   }
 
   .dropdown-content {
@@ -194,14 +204,14 @@
     position: absolute;
     top: calc(100% + 8px);
     left: 0;
-    background: rgba(20, 18, 14, 0.98);
+    background: rgba(255, 255, 255, 0.98);
     border: 1px solid var(--border);
     border-radius: 14px;
     min-width: 240px;
     max-height: 280px;
     overflow-y: auto;
     z-index: 100;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
     backdrop-filter: blur(15px);
     padding: 6px;
   }
@@ -302,17 +312,20 @@
     border: 1px solid var(--border);
     border-radius: 14px;
     overflow: hidden;
-    transition: border-color 0.2s, background 0.2s;
+    transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
     backdrop-filter: blur(12px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
   }
 
   .card:hover {
-    border-color: rgba(201,168,76,0.25);
+    border-color: rgba(156, 127, 47, 0.2);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.04);
   }
 
   .card.open {
     background: var(--card-bg-open);
-    border-color: rgba(201,168,76,0.3);
+    border-color: rgba(156, 127, 47, 0.25);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
   }
 
   /* ── CARD MAIN ROW ── */
@@ -332,7 +345,7 @@
     object-fit: cover;
     border: 1.5px solid var(--border);
     flex-shrink: 0;
-    background: #1a1710;
+    background: #fdfdfb;
   }
 
   .card-info {
@@ -449,7 +462,7 @@
     align-items: center;
     justify-content: space-between;
     padding: 6px 0;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.04);
   }
 
   .phone-row:last-child { border-bottom: none; }
@@ -518,8 +531,8 @@
     top: 24px;
     right: 24px;
     z-index: 100;
-    background: rgba(255, 255, 255, 0.08);
-    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid var(--border);
     color: var(--text-primary);
     padding: 8px 16px;
     border-radius: 20px;
@@ -534,13 +547,14 @@
     justify-content: center;
     gap: 6px;
     user-select: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   }
   .lang-btn:hover {
-    background: rgba(255, 255, 255, 0.15);
+    background: #ffffff;
     border-color: var(--accent);
     color: var(--accent);
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   }
   .lang-btn:active {
     transform: translateY(0);
@@ -558,7 +572,7 @@
   .footer {
     padding: 30px 20px;
     margin-top: 40px;
-    background: rgba(10, 9, 6, 0.5);
+    background: rgba(255, 255, 255, 0.5);
     backdrop-filter: blur(12px);
   }
 
@@ -629,7 +643,7 @@
 
 <footer class="footer">
   <div class="footer-content">
-    <img src="https://cdn.jsdelivr.net/gh/ItsKalfox/ItsKalfox/tailcoded-logo-mini.png" alt="Tail Coded Studio" class="footer-logo" />
+    <img src="https://cdn.jsdelivr.net/gh/ItsKalfox/ItsKalfox/tailcoded-logo-mini-black.png" alt="Tail Coded Studio" class="footer-logo" />
     <span class="footer-text">&copy; 2026 Tail Coded Studio. All rights reserved.</span>
   </div>
 </footer>
@@ -654,7 +668,7 @@ const TRANSLATIONS = {
   },
   si: {
     title: "කාර්යාලීය සම්බන්ධතා නාමාවලිය",
-    heroTitle: "ප්‍රාදේශීය ලේකම්<br>කාර්යාලය <span> - මාතර</span>",
+    heroTitle: "ප්‍රාදේශීය ලේකම්<br>කාර්යාලය <span> මාතර</span>",
     heroSub: "සේවක සම්බන්ධතා නාමාවලිය",
     searchPlaceholder: "නම හෝ තනතුර අනුව සොයන්න...",
     call: "අමතන්න",
