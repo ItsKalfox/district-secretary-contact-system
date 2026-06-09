@@ -20,7 +20,15 @@
   <div class="hero-gradient"></div>
   <div class="direct-lines-container">
     <button id="directLinesToggle" class="direct-btn" aria-label="Show direct lines">
-      <img src="Images/background/telephone.png" class="phone-icon" width="13" height="13";/>
+      <svg class="phone-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 14h18c1 0 2 1 2 2v4c0 1-1 2-2 2H3c-1 0-2-1-2-2v-4c0-1 1-2 2-2z" />
+        <circle cx="6" cy="18" r="1" fill="currentColor" />
+        <circle cx="12" cy="18" r="1" fill="currentColor" />
+        <circle cx="18" cy="18" r="1" fill="currentColor" />
+        <path d="M5 10a4 4 0 0 1 14 0" />
+        <path d="M3 10a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v1H3v-1z" />
+        <path d="M1 18a2 2 0 0 0 0 4h1" />
+      </svg>
       <span class="btn-text">Direct Lines</span>
     </button>
     <div class="direct-popup" id="directPopup">
@@ -41,10 +49,36 @@
           <span class="direct-number">041 223 3208</span>
         </div>
       </div>
+      <div class="direct-divider"></div>
+      <div class="direct-row">
+        <span class="direct-row-label" id="lblDirectEmail">Email</span>
+        <div class="direct-row-value">
+          <div class="email-row" style="margin-top: 0;">
+            <svg class="email-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7L12 13 2 7"/></svg>
+            <a class="email-link" href="mailto:mataradso@gmail.com">mataradso@gmail.com</a>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
   <button id="langToggle" class="lang-btn">සිංහල</button>
+  <button id="themeToggle" class="theme-btn" aria-label="Toggle theme">
+    <svg class="theme-icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+    </svg>
+    <svg class="theme-icon-sun" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </button>
   <div class="hero-content">
     <h1 class="hero-title">Divisional <span>Secretariat </span>of <br>Matara Four Gravets</h1>
     <p class="hero-sub">Employee Contact Directory</p>

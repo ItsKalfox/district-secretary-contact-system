@@ -16,7 +16,10 @@ const TRANSLATIONS = {
     directLines: "Direct Lines",
     directLine: "Direct Line",
     directLineLabel: "Receptionist",
-    faxLabel: "Fax"
+    faxLabel: "Fax",
+    emailLabel: "Email",
+    themeLight: "Switch to light theme",
+    themeDark: "Switch to dark theme"
   },
   si: {
     title: "කාර්යාලීය සම්බන්ධතා නාමාවලිය",
@@ -33,11 +36,15 @@ const TRANSLATIONS = {
     directLines: "සෘජු ඇමතුම්",
     directLine: "සෘජු දුරකථනය",
     directLineLabel: "පිළිගැනීමේ නිලධාරී",
-    faxLabel: "ෆැක්ස්"
+    faxLabel: "ෆැක්ස්",
+    emailLabel: "විද්‍යුත් තැපෑල",
+    themeLight: "ආලෝක තේමාවට මාරු වන්න",
+    themeDark: "අඳුරු තේමාවට මාරු වන්න"
   }
 };
 
 let currentLang = localStorage.getItem('preferredLang') || 'en';
+let currentTheme = localStorage.getItem('preferredTheme') || 'light';
 let allCards = [];
 let employeeData = [];
 let categoriesList = [];
@@ -238,10 +245,29 @@ function setLanguage(lang) {
   
   document.getElementById('lblDirectLine').textContent = t.directLineLabel;
   document.getElementById('lblFax').textContent = t.faxLabel;
+  document.getElementById('lblDirectEmail').textContent = t.emailLabel;
   document.getElementById('lnkDirectLineCall').querySelector('.call-text').textContent = t.call;
+
+  // Localize theme button
+  const themeToggle = document.getElementById('themeToggle');
+  if (themeToggle) {
+    themeToggle.setAttribute('aria-label', currentTheme === 'dark' ? t.themeLight : t.themeDark);
+  }
 
   renderDropdown();
   renderCards();
+}
+
+function setTheme(theme) {
+  currentTheme = theme;
+  localStorage.setItem('preferredTheme', theme);
+  document.documentElement.setAttribute('data-theme', theme);
+  
+  const themeToggle = document.getElementById('themeToggle');
+  if (themeToggle) {
+    const t = TRANSLATIONS[currentLang];
+    themeToggle.setAttribute('aria-label', theme === 'dark' ? t.themeLight : t.themeDark);
+  }
 }
 
 function renderCards() {
@@ -352,6 +378,11 @@ document.getElementById('langToggle').addEventListener('click', () => {
   setLanguage(nextLang);
 });
 
+document.getElementById('themeToggle').addEventListener('click', () => {
+  const nextTheme = currentTheme === 'light' ? 'dark' : 'light';
+  setTheme(nextTheme);
+});
+
 document.getElementById('searchInput').addEventListener('input', function() {
   renderCards();
 });
@@ -392,5 +423,6 @@ window.addEventListener('click', (e) => {
   }
 });
 
-// Initialize language on startup
+// Initialize theme and language on startup
+setTheme(currentTheme);
 setLanguage(currentLang);
